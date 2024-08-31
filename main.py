@@ -1,19 +1,7 @@
 import argparse
 import subprocess
 
-
-def run_command_get_output(command):
-    # Run the command and capture the output
-    result = subprocess.run(command, capture_output=True, text=True, shell=True)
-    return result.stdout
-
-
 parser = argparse.ArgumentParser(description="Run a shell command.")
-
-# ading help
-parser.add_argument("command", nargs="+", help="The command to run, e.g., dir or ls")
-
-
 parser.add_argument(
     "--verbose", "-v", action="store_true", help="Enable verbose output"
 )
@@ -28,6 +16,11 @@ parser.add_argument(
 args = parser.parse_args()
 
 
+def run_command_get_output(command):
+    # Run the command and capture the output
+    result = subprocess.run(command, capture_output=True, text=True, shell=True)
+    return result.stdout
+    
 def set_firewall(port_no):
     for port_no in port_no:
         inbound_firewall = [
@@ -53,7 +46,6 @@ def set_firewall(port_no):
         listen_port_no=args.ports, serv_ip=args.ip, serv_port=args.serv_ports
     )
 
-
 def set_netsh_chain(listen_port_no, serv_ip, serv_port):
     pair_ports = list(zip(listen_port_no, serv_port))
     for listen_port_no, serv_port in pair_ports:
@@ -75,7 +67,6 @@ def set_netsh_chain(listen_port_no, serv_ip, serv_port):
     input("press enter for exiting: ")
     remove_netsh_chain(port_no=args.ports)
     remove_firewall(port_no=args.ports)
-
 
 def remove_netsh_chain(port_no):
     for port_no in port_no:
@@ -109,7 +100,6 @@ def remove_firewall(port_no):
         )
 
         print(fire_output)
-
 
 def main():
     if len(args.ports) == len(args.serv_ports):
